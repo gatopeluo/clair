@@ -20,7 +20,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/coreos/clair/pkg/version"
+	"github.com/gatopeluo/clair/pkg/version"
 )
 
 // GetWithUserAgent performs an HTTP GET with the proper Clair User-Agent.

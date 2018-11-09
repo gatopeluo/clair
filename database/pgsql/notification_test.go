@@ -20,10 +20,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/versionfmt"
-	"github.com/coreos/clair/ext/versionfmt/dpkg"
-	"github.com/coreos/clair/pkg/commonerr"
+	"github.com/gatopeluo/clair/database"
+	"github.com/gatopeluo/clair/ext/versionfmt"
+	"github.com/gatopeluo/clair/ext/versionfmt/dpkg"
+	"github.com/gatopeluo/clair/pkg/commonerr"
 )
 
 func TestNotification(t *testing.T) {

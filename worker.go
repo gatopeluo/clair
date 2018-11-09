@@ -19,12 +19,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/featurefmt"
-	"github.com/coreos/clair/ext/featurens"
-	"github.com/coreos/clair/ext/imagefmt"
-	"github.com/coreos/clair/pkg/commonerr"
-	"github.com/coreos/clair/pkg/tarutil"
+	"github.com/gatopeluo/clair/database"
+	"github.com/gatopeluo/clair/ext/featurefmt"
+	"github.com/gatopeluo/clair/ext/featurens"
+	"github.com/gatopeluo/clair/ext/imagefmt"
+	"github.com/gatopeluo/clair/pkg/commonerr"
+	"github.com/gatopeluo/clair/pkg/tarutil"
 )
 
 const (
@@ -42,6 +42,8 @@ var (
 	// ErrParentUnknown is the error that should be raised when a parent layer
 	// has yet to be processed for the current layer.
 	ErrParentUnknown = commonerr.NewBadRequestError("worker: parent layer is unknown, it must be processed first")
+
+	// PipRoutes is a placeholder of the archives needed by the pip features driver.
 
 	urlParametersRegexp = regexp.MustCompile(`(\?|\&)([^=]+)\=([^ &]+)`)
 )
@@ -69,7 +71,8 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 	if imageFormat == "" {
 		return commonerr.NewBadRequestError("could not process a layer which does not have a format")
 	}
-
+	tarutil.LayerName = name
+	//fmt.Println(name + " " + path + " " + imageFormat)
 	log.WithFields(log.Fields{logLayerName: name, "path": cleanURL(path), "engine version": Version, "parent layer": parentName, "format": imageFormat}).Debug("processing layer")
 
 	// Check to see if the layer is already in the database.
@@ -104,7 +107,7 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 		log.WithFields(log.Fields{logLayerName: name, "past engine version": layer.EngineVersion, "current engine version": Version}).Debug("layer content has already been processed in the past with older engine. analyzing again")
 	}
 
-	// Analyze the content.
+	// Analyze //fmt.Println(PipRoutes)the content.
 	layer.Namespace, layer.Features, err = detectContent(imageFormat, name, path, headers, layer.Parent)
 	if err != nil {
 		return err
@@ -117,6 +120,7 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 // Features.
 func detectContent(imageFormat, name, path string, headers map[string]string, parent *database.Layer) (namespace *database.Namespace, featureVersions []database.FeatureVersion, err error) {
 	totalRequiredFiles := append(featurefmt.RequiredFilenames(), featurens.RequiredFilenames()...)
+	//files, err := imagefmt.Extract(imageFormat, path, headers, []string{""})
 	files, err := imagefmt.Extract(imageFormat, path, headers, totalRequiredFiles)
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{logLayerName: name, "path": cleanURL(path)}).Error("failed to extract data from path")
@@ -191,6 +195,7 @@ func detectFeatureVersions(name string, files tarutil.FilesMap, namespace *datab
 
 	// Ensure that each FeatureVersion has an associated Namespace.
 	for i, feature := range features {
+		//fmt.Println("feature: " + feature.Feature.Name + " " + feature.Version)
 		if feature.Feature.Namespace.Name != "" {
 			// There is a Namespace associated.
 			continue

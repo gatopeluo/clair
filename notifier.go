@@ -17,15 +17,15 @@ package clair
 import (
 	"time"
 
-	"github.com/coreos/pkg/timeutil"
+	"github.com/gatopeluo/pkg/timeutil"
 	"github.com/pborman/uuid"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/notification"
-	"github.com/coreos/clair/pkg/commonerr"
-	"github.com/coreos/clair/pkg/stopper"
+	"github.com/gatopeluo/clair/database"
+	"github.com/gatopeluo/clair/ext/notification"
+	"github.com/gatopeluo/clair/pkg/commonerr"
+	"github.com/gatopeluo/clair/pkg/stopper"
 )
 
 const (

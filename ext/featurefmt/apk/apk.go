@@ -21,11 +21,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/featurefmt"
-	"github.com/coreos/clair/ext/versionfmt"
-	"github.com/coreos/clair/ext/versionfmt/dpkg"
-	"github.com/coreos/clair/pkg/tarutil"
+	"github.com/gatopeluo/clair/database"
+	"github.com/gatopeluo/clair/ext/featurefmt"
+	"github.com/gatopeluo/clair/ext/versionfmt"
+	"github.com/gatopeluo/clair/ext/versionfmt/dpkg"
+	"github.com/gatopeluo/clair/pkg/tarutil"
 )
 
 func init() {

@@ -23,11 +23,11 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/featurens"
-	"github.com/coreos/clair/ext/versionfmt/dpkg"
-	"github.com/coreos/clair/ext/versionfmt/rpm"
-	"github.com/coreos/clair/pkg/tarutil"
+	"github.com/gatopeluo/clair/database"
+	"github.com/gatopeluo/clair/ext/featurens"
+	"github.com/gatopeluo/clair/ext/versionfmt/dpkg"
+	"github.com/gatopeluo/clair/ext/versionfmt/rpm"
+	"github.com/gatopeluo/clair/pkg/tarutil"
 )
 
 var (
