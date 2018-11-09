@@ -24,6 +24,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -32,6 +33,8 @@ var (
 	// ErrCouldNotExtract occurs when an extraction fails.
 	ErrCouldNotExtract = errors.New("tarutil: could not extract the archive")
 
+	//LayerName needed from the worker script
+	LayerName = ""
 	// ErrExtractedFileTooBig occurs when a file to extract is too big.
 	ErrExtractedFileTooBig = errors.New("tarutil: could not extract one or more files from the archive: file too big")
 
@@ -61,6 +64,7 @@ func ExtractFiles(r io.Reader, filenames []string) (FilesMap, error) {
 	}
 	defer tr.Close()
 
+	dataMap := [][]byte{}
 	// For each element in the archive
 	for {
 		hdr, err := tr.Next()
@@ -74,6 +78,7 @@ func ExtractFiles(r io.Reader, filenames []string) (FilesMap, error) {
 		// Get element filename
 		filename := hdr.Name
 		filename = strings.TrimPrefix(filename, "./")
+		dataMap = append(dataMap, []byte(filename))
 
 		// Determine if we should extract the element
 		toBeExtracted := false
@@ -82,6 +87,15 @@ func ExtractFiles(r io.Reader, filenames []string) (FilesMap, error) {
 				toBeExtracted = true
 				break
 			}
+			//for either the npm or pip listers there's a different filecheck
+			if s == "pip" && strings.Contains(filename, "-info") {
+				toBeExtracted = true
+				break
+			}
+			if s == "node" && strings.Contains(filename, "node_modules") {
+				toBeExtracted = true
+			}
+
 		}
 
 		if toBeExtracted {
@@ -96,6 +110,26 @@ func ExtractFiles(r io.Reader, filenames []string) (FilesMap, error) {
 				data[filename] = d
 			}
 		}
+
+	}
+	//Open a file named after the hash of the layer to print the filesystem to.
+	name := LayerName
+	if name != "" {
+		f, err := os.OpenFile("/tmp/"+name+"-fs", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		for _, s := range dataMap {
+			if _, err = f.Write(s); err != nil {
+				panic(err)
+			}
+			f.WriteString("\n")
+		}
+		f.Sync()
+		f.Close()
+		name = ""
 	}
 
 	return data, nil
