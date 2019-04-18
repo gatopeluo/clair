@@ -16,6 +16,7 @@ package pgsql
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 
@@ -69,7 +70,7 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	}
 
 	// Do cache lookup.
-	cacheIndex := strings.Join([]string{"featureversion", fv.Feature.Namespace.Name, fv.Feature.Name, fv.Version}, ":")
+	cacheIndex := strings.Join([]string{"featureversion", fv.Feature.Namespace.Name, fv.Feature.Name, fv.Version, fv.VersionFormat}, ":")
 	if pgSQL.cache != nil {
 		promCacheQueriesTotal.WithLabelValues("featureversion").Inc()
 		id, found := pgSQL.cache.Get(cacheIndex)
@@ -92,15 +93,21 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	}
 
 	fv.Feature.ID = featureID
+	vF := fv.VersionFormat
+	if vF == "" {
+		vF = "dpkg"
+	}
 
 	// Try to find the FeatureVersion.
 	//
 	// In a populated database, the likelihood of the FeatureVersion already being there is high.
 	// If we can find it here, we then avoid using a transaction and locking the database.
-	err = pgSQL.QueryRow(searchFeatureVersion, featureID, fv.Version).Scan(&fv.ID)
+	err = pgSQL.QueryRow(searchFeatureVersion, featureID, fv.Version, fv.VersionFormat).Scan(&fv.ID)
 	if err != nil && err != sql.ErrNoRows {
+		fmt.Println(err)
 		return 0, handleError("searchFeatureVersion", err)
 	}
+
 	if err == nil {
 		if pgSQL.cache != nil {
 			pgSQL.cache.Add(cacheIndex, fv.ID)
@@ -133,7 +140,7 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	var created bool
 
 	t = time.Now()
-	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version).Scan(&created, &fv.ID)
+	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version, fv.VersionFormat).Scan(&created, &fv.ID)
 	observeQueryTime("insertFeatureVersion", "soiFeatureVersion", t)
 
 	if err != nil {

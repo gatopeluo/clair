@@ -17,6 +17,7 @@
 package featurefmt
 
 import (
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"runtime"
@@ -75,7 +76,10 @@ func ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 
 	var totalFeatures []database.FeatureVersion
 	for _, lister := range listers {
-		features, err := lister.ListFeatures(files)
+		var fileForLister tarutil.FilesMap
+		fileForLister = files
+		fmt.Println(len(fileForLister))
+		features, err := lister.ListFeatures(fileForLister)
 		if err != nil {
 			return []database.FeatureVersion{}, err
 		}

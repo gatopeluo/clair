@@ -17,6 +17,7 @@ package rpm
 
 import (
 	"bufio"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -40,6 +41,7 @@ func init() {
 
 func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 	f, hasFile := files["var/lib/rpm/Packages"]
+	fmt.Println("rpm ", len(files))
 	if !hasFile {
 		return []database.FeatureVersion{}, nil
 	}
@@ -97,7 +99,8 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 			Feature: database.Feature{
 				Name: line[0],
 			},
-			Version: version,
+			Version:       version,
+			VersionFormat: "rpm",
 		}
 		packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
 	}

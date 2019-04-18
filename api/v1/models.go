@@ -61,7 +61,7 @@ func LayerFromDatabaseModel(dbLayer database.Layer, withFeatures, withVulnerabil
 			feature := Feature{
 				Name:          dbFeatureVersion.Feature.Name,
 				NamespaceName: dbFeatureVersion.Feature.Namespace.Name,
-				VersionFormat: dbFeatureVersion.Feature.Namespace.VersionFormat,
+				VersionFormat: dbFeatureVersion.VersionFormat,
 				Version:       dbFeatureVersion.Version,
 				AddedBy:       dbFeatureVersion.AddedBy.Name,
 			}
@@ -168,7 +168,7 @@ func FeatureFromDatabaseModel(dbFeatureVersion database.FeatureVersion) Feature 
 	return Feature{
 		Name:          dbFeatureVersion.Feature.Name,
 		NamespaceName: dbFeatureVersion.Feature.Namespace.Name,
-		VersionFormat: dbFeatureVersion.Feature.Namespace.VersionFormat,
+		VersionFormat: dbFeatureVersion.VersionFormat,
 		Version:       version,
 		AddedBy:       dbFeatureVersion.AddedBy.Name,
 	}
@@ -178,7 +178,7 @@ func (f Feature) DatabaseModel() (fv database.FeatureVersion, err error) {
 	var version string
 	if f.Version == "None" {
 		version = versionfmt.MaxVersion
-	} else {
+	} else if fv.VersionFormat != "dpkg" {
 		err = versionfmt.Valid(f.VersionFormat, f.Version)
 		if err != nil {
 			return
@@ -194,7 +194,8 @@ func (f Feature) DatabaseModel() (fv database.FeatureVersion, err error) {
 				VersionFormat: f.VersionFormat,
 			},
 		},
-		Version: version,
+		VersionFormat: fv.VersionFormat,
+		Version:       version,
 	}
 
 	return

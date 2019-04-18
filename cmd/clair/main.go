@@ -40,7 +40,6 @@ import (
 	// Register extensions.
 	_ "github.com/gatopeluo/clair/ext/featurefmt/apk"
 	_ "github.com/gatopeluo/clair/ext/featurefmt/dpkg"
-
 	_ "github.com/gatopeluo/clair/ext/featurefmt/npm"
 	_ "github.com/gatopeluo/clair/ext/featurefmt/pip"
 	_ "github.com/gatopeluo/clair/ext/featurefmt/rpm"

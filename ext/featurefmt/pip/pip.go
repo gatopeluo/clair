@@ -1,6 +1,7 @@
 package pip
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/gatopeluo/clair/database"
@@ -29,9 +30,12 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 			}
 		}
 	}
+
+	//If empty, it returns an empty list with no errors
 	if len(auxMap) == 0 {
 		return []database.FeatureVersion{}, nil
 	}
+
 	for i := range auxMap {
 		if !(strings.Contains(i, "dist-info") || strings.Contains(i, "egg-info")) {
 			delete(auxMap, auxMap[i])
@@ -50,22 +54,29 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 		counter := 0
 		for _, s := range file {
 			aux := strings.Split(s, ":")
+
 			// Here we do a switch-case for each line, this is to check wether it
 			// has the info for the version or the name of the package
 			switch aux[0] {
+
 			case "Name":
 				counter++
 				pkg.Feature = database.Feature{Name: aux[1][1:]}
+
 			case "Version":
 				// Version starts the line from the second char after de ':' cause
 				// there is always a space before the version
 				pkg.Version = aux[1][1:]
 				counter++
+
 			default:
+				fmt.Println(s)
 			}
 		}
 		if pkg.Feature.Name != "" && pkg.Version != "" {
+			pkg.VersionFormat = "pip"
 			packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
+			fmt.Println(pkg.Feature.Name)
 		}
 	}
 

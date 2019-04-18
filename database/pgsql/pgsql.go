@@ -284,7 +284,8 @@ func handleError(desc string, err error) error {
 	log.WithError(err).WithField("Description", desc).Error("Handled Database Error")
 	promErrorsTotal.WithLabelValues(desc).Inc()
 
-	if _, o := err.(*pq.Error); o || err == sql.ErrTxDone || strings.HasPrefix(err.Error(), "sql:") {
+	if err, o := err.(*pq.Error); o || err == sql.ErrTxDone || strings.HasPrefix(err.Error(), "sql:") {
+		fmt.Println(err, "\n", desc)
 		return database.ErrBackendException
 	}
 

@@ -15,6 +15,7 @@
 package clair
 
 import (
+	"fmt"
 	"regexp"
 
 	log "github.com/sirupsen/logrus"
@@ -121,7 +122,9 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 func detectContent(imageFormat, name, path string, headers map[string]string, parent *database.Layer) (namespace *database.Namespace, featureVersions []database.FeatureVersion, err error) {
 	totalRequiredFiles := append(featurefmt.RequiredFilenames(), featurens.RequiredFilenames()...)
 	//files, err := imagefmt.Extract(imageFormat, path, headers, []string{""})
+	fmt.Println(totalRequiredFiles)
 	files, err := imagefmt.Extract(imageFormat, path, headers, totalRequiredFiles)
+
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{logLayerName: name, "path": cleanURL(path)}).Error("failed to extract data from path")
 		return
@@ -129,15 +132,18 @@ func detectContent(imageFormat, name, path string, headers map[string]string, pa
 
 	namespace, err = detectNamespace(name, files, parent)
 	if err != nil {
+		fmt.Println("err on namespace")
 		return
 	}
 
 	// Detect features.
 	featureVersions, err = detectFeatureVersions(name, files, namespace, parent)
 	if err != nil {
+		fmt.Println("err on features")
 		return
 	}
 	if len(featureVersions) > 0 {
+		fmt.Println(len(featureVersions))
 		log.WithFields(log.Fields{logLayerName: name, "feature count": len(featureVersions)}).Debug("detected features")
 	}
 
@@ -153,6 +159,7 @@ func detectNamespace(name string, files tarutil.FilesMap, parent *database.Layer
 		log.WithFields(log.Fields{logLayerName: name, "detected namespace": namespace.Name}).Debug("detected namespace")
 		return
 	}
+	fmt.Println("no namespace detected =(")
 
 	// Fallback to the parent's namespace.
 	if parent != nil {

@@ -2,6 +2,7 @@ package npm
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -23,12 +24,11 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 
 	//Make a map for the eventual features
 	Libs := make(map[string]string)
+	fmt.Println("npm ", len(files))
 
 	// Fill Libs, using name of package as key, and filepath as value
 	for i := range files {
-		if !strings.HasSuffix(i, "package.json") {
-			delete(files, i)
-		} else {
+		if strings.HasSuffix(i, "package.json") {
 			auxSlice := strings.Split(i, "/")
 			filepath := auxSlice[len(auxSlice)-2]
 			Libs[filepath] = i

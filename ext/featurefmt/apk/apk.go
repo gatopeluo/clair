@@ -18,6 +18,7 @@ package apk
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 
 	log "github.com/sirupsen/logrus"
 
@@ -36,6 +37,7 @@ type lister struct{}
 
 func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 	file, exists := files["lib/apk/db/installed"]
+	fmt.Println("apk ", len(files))
 	if !exists {
 		return []database.FeatureVersion{}, nil
 	}
@@ -63,6 +65,7 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 				log.WithError(err).WithField("version", version).Warning("could not parse package version. skipping")
 			} else {
 				ipkg.Version = version
+				ipkg.VersionFormat = "apk"
 			}
 		case line == "":
 			// Restart if the parser reaches another package definition before

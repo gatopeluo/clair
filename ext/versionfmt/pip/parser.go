@@ -22,7 +22,7 @@ import (
 	"github.com/gatopeluo/clair/ext/versionfmt"
 )
 
-// ParserName is the name by which the dpkg parser is registered.
+// ParserName is the name by which the pip parser is registered.
 const ParserName = "pip"
 
 type version struct {

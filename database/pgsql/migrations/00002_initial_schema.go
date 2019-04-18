@@ -44,7 +44,8 @@ func init() {
 			`CREATE TABLE IF NOT EXISTS FeatureVersion (
         id SERIAL PRIMARY KEY,
         feature_id INT NOT NULL REFERENCES Feature,
-        version VARCHAR(128) NOT NULL);`,
+        version VARCHAR(128) NOT NULL,
+        versionformat VARCHAR(128) NOT NULL);`,
 			`CREATE INDEX ON FeatureVersion (feature_id);`,
 
 			`CREATE TYPE modification AS ENUM ('add', 'del');`,

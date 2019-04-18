@@ -52,9 +52,10 @@ type Feature struct {
 type FeatureVersion struct {
 	Model
 
-	Feature    Feature
-	Version    string
-	AffectedBy []Vulnerability
+	VersionFormat string
+	Feature       Feature
+	Version       string
+	AffectedBy    []Vulnerability
 
 	// For output purposes. Only make sense when the feature version is in the context of an image.
 	AddedBy Layer

@@ -17,6 +17,7 @@ package v1
 import (
 	"compress/gzip"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -104,6 +105,8 @@ func postLayer(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx 
 		return postLayerRoute, http.StatusBadRequest
 	}
 
+	fmt.Println(request.Layer.Name + "\n")
+	fmt.Println(request.Layer.ParentName + "\n")
 	if request.Layer == nil {
 		writeResponse(w, r, http.StatusBadRequest, LayerEnvelope{Error: &Error{"failed to provide layer"}})
 		return postLayerRoute, http.StatusBadRequest
@@ -141,7 +144,6 @@ func postLayer(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx 
 func getLayer(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx *context) (string, int) {
 	_, withFeatures := r.URL.Query()["features"]
 	_, withVulnerabilities := r.URL.Query()["vulnerabilities"]
-
 	dbLayer, err := ctx.Store.FindLayer(p.ByName("layerName"), withFeatures, withVulnerabilities)
 	if err == commonerr.ErrNotFound {
 		writeResponse(w, r, http.StatusNotFound, LayerEnvelope{Error: &Error{err.Error()}})

@@ -54,16 +54,16 @@ const (
 		SELECT id FROM new_feature`
 
 	searchFeatureVersion = `
-		SELECT id FROM FeatureVersion WHERE feature_id = $1 AND version = $2`
+		SELECT id FROM FeatureVersion WHERE feature_id = $1 AND version = $2 AND versionformat = $3`
 
 	soiFeatureVersion = `
 		WITH new_featureversion AS (
-			INSERT INTO FeatureVersion(feature_id, version)
-			SELECT CAST($1 AS INTEGER), CAST($2 AS VARCHAR)
-			WHERE NOT EXISTS (SELECT id FROM FeatureVersion WHERE feature_id = $1 AND version = $2)
+			INSERT INTO FeatureVersion(feature_id, version, versionformat)
+			SELECT CAST($1 AS INTEGER), CAST($2 AS VARCHAR), CAST($3 AS VARCHAR)
+			WHERE NOT EXISTS (SELECT id FROM FeatureVersion WHERE feature_id = $1 AND version = $2 AND versionformat = $3)
 			RETURNING id
 		)
-		SELECT false, id FROM FeatureVersion WHERE feature_id = $1 AND version = $2
+		SELECT false, id FROM FeatureVersion WHERE feature_id = $1 AND version = $2 AND versionformat = $3
 		UNION
 		SELECT true, id FROM new_featureversion`
 
