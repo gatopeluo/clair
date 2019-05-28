@@ -2,7 +2,6 @@ package npm
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -24,7 +23,6 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 
 	//Make a map for the eventual features
 	Libs := make(map[string]string)
-	fmt.Println("npm ", len(files))
 
 	// Fill Libs, using name of package as key, and filepath as value
 	for i := range files {
@@ -63,6 +61,7 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 		//Add the info to the features
 		pkg.Feature.Name = pkgInfo.Name
 		pkg.Version = pkgInfo.Version
+		pkg.VersionFormat = "npm"
 		if pkg.Feature.Name != "" && pkg.Version != "" {
 			packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
 		}

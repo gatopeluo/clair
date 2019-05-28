@@ -146,11 +146,11 @@ func getLayerFeatureVersions(tx *sql.Tx, layerID int) ([]database.FeatureVersion
 			&modification,
 			&fv.Feature.Namespace.ID,
 			&fv.Feature.Namespace.Name,
-			&fv.Feature.Namespace.VersionFormat,
 			&fv.Feature.ID,
 			&fv.Feature.Name,
 			&fv.ID,
 			&fv.Version,
+			&fv.Feature.VersionFormat,
 			&fv.AddedBy.ID,
 			&fv.AddedBy.Name,
 		)
@@ -373,7 +373,6 @@ func (pgSQL *pgSQL) updateDiffFeatureVersions(tx *sql.Tx, layer, existingLayer *
 			del = append(del, *parentLayerFeaturesMapNV[nv])
 		}
 	}
-
 	// Insert FeatureVersions in the database.
 	addIDs, err := pgSQL.insertFeatureVersions(add)
 	if err != nil {

@@ -93,7 +93,7 @@ const (
 			FROM Layer l, layer_tree lt
 			WHERE l.id = lt.parent_id
 		)
-		SELECT ldf.featureversion_id, ldf.modification, fn.id, fn.name, fn.version_format, f.id, f.name, fv.id, fv.version, ltree.id, ltree.name
+		SELECT ldf.featureversion_id, ldf.modification, fn.id, fn.name, f.id, f.name, fv.id, fv.version, fv.versionformat, ltree.id, ltree.name
 		FROM Layer_diff_FeatureVersion ldf
 		JOIN (
 			SELECT row_number() over (ORDER BY depth DESC), id, name FROM layer_tree

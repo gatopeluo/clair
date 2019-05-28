@@ -78,11 +78,14 @@ func ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 	for _, lister := range listers {
 		var fileForLister tarutil.FilesMap
 		fileForLister = files
-		fmt.Println(len(fileForLister))
 		features, err := lister.ListFeatures(fileForLister)
 		if err != nil {
+			fmt.Println(err)
 			return []database.FeatureVersion{}, err
 		}
+		// for _, f := range features {
+		// 	fmt.Println("debug of features 2: ", f)
+		// }
 		totalFeatures = append(totalFeatures, features...)
 	}
 

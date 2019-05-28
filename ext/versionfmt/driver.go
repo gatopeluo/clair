@@ -18,6 +18,7 @@ package versionfmt
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -90,6 +91,7 @@ func GetParser(name string) (p Parser, exists bool) {
 func Valid(format, version string) error {
 	versionParser, exists := GetParser(format)
 	if !exists {
+		fmt.Println("opcion 1")
 		return ErrUnknownVersionFormat
 	}
 
@@ -105,6 +107,7 @@ func Valid(format, version string) error {
 func Compare(format, versionA, versionB string) (int, error) {
 	versionParser, exists := GetParser(format)
 	if !exists {
+		fmt.Println("opcion 2")
 		return 0, ErrUnknownVersionFormat
 	}
 

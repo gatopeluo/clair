@@ -27,13 +27,16 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gatopeluo/clair/pkg/commonerr"
+	"github.com/gatopeluo/clair/pkg/httputil"
 	"github.com/gatopeluo/clair/pkg/tarutil"
+	sing "github.com/sylabs/singularity/pkg/client/shub"
 )
 
 var (
@@ -105,39 +108,80 @@ func UnregisterExtractor(name string) {
 // image format, then extracts the files specified.
 func Extract(format, path string, headers map[string]string, toExtract []string) (tarutil.FilesMap, error) {
 	var layerReader io.ReadCloser
-	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
-		// Create a new HTTP request object.
-		request, err := http.NewRequest("GET", path, nil)
-		if err != nil {
-			return nil, ErrCouldNotFindLayer
-		}
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") || strings.HasPrefix(path, "shub://") {
 
-		// Set any provided HTTP Headers.
-		if headers != nil {
-			for k, v := range headers {
-				request.Header.Set(k, v)
+		// Check if it's an shub uri
+		if strings.HasPrefix(path, "shub://") {
+			format = "Singularity"
+
+			// Generate valid user-agent value
+			agentValue := httputil.GetWithSingularityUseAgent()
+
+			//TODO: check if image exists first
+
+			//Download the image using the client pkgs from singularity
+			image, err := sing.DownloadImage("", path, false, false, agentValue)
+			if err != nil {
+				return nil, err
 			}
+
+			//If squashfs is detected, all files will be sent to a temporary directory
+			dir, err := sing.ConvertImage(image, "")
+			if err != nil {
+				return nil, err
+			}
+
+			// filename := filepath.Base(dir)
+
+			cmd1 := "chmod -R 755 " + dir
+			cmd2 := "cd " + dir
+			cmd3 := "tar -cf /home/tomasgonzalez/Documents/layer.tar *"
+			cmd := exec.Command("/bin/sh", "-c", cmd1+";"+cmd2+";"+cmd3)
+			err = cmd.Run()
+			if err != nil {
+				return nil, ErrCouldNotFindLayer
+			}
+
+			layerReader, err = os.Open("/home/tomasgonzalez/Documents/layer.tar")
+			if err != nil {
+				return nil, ErrCouldNotFindLayer
+			}
+
+		} else {
+			// Create a new HTTP request object.
+			request, err := http.NewRequest("GET", path, nil)
+			if err != nil {
+				return nil, ErrCouldNotFindLayer
+			}
+
+			// Set any provided HTTP Headers.
+			if headers != nil {
+				for k, v := range headers {
+					request.Header.Set(k, v)
+				}
+			}
+
+			// Send the request and handle the response.
+			tr := &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureTLS},
+				Proxy:           http.ProxyFromEnvironment,
+			}
+			client := &http.Client{Transport: tr}
+			r, err := client.Do(request)
+			if err != nil {
+				log.WithError(err).Warning("could not download layer")
+				return nil, ErrCouldNotFindLayer
+			}
+
+			// Fail if we don't receive a 2xx HTTP status code.
+			if math.Floor(float64(r.StatusCode/100)) != 2 {
+				log.WithField("status code", r.StatusCode).Warning("could not download layer: expected 2XX")
+				return nil, ErrCouldNotFindLayer
+			}
+
+			layerReader = r.Body
 		}
 
-		// Send the request and handle the response.
-		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureTLS},
-			Proxy:           http.ProxyFromEnvironment,
-		}
-		client := &http.Client{Transport: tr}
-		r, err := client.Do(request)
-		if err != nil {
-			log.WithError(err).Warning("could not download layer")
-			return nil, ErrCouldNotFindLayer
-		}
-
-		// Fail if we don't receive a 2xx HTTP status code.
-		if math.Floor(float64(r.StatusCode/100)) != 2 {
-			log.WithField("status code", r.StatusCode).Warning("could not download layer: expected 2XX")
-			return nil, ErrCouldNotFindLayer
-		}
-
-		layerReader = r.Body
 	} else {
 		var err error
 		layerReader, err = os.Open(path)

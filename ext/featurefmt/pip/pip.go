@@ -1,7 +1,6 @@
 package pip
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gatopeluo/clair/database"
@@ -70,13 +69,11 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 				counter++
 
 			default:
-				fmt.Println(s)
 			}
 		}
 		if pkg.Feature.Name != "" && pkg.Version != "" {
 			pkg.VersionFormat = "pip"
 			packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
-			fmt.Println(pkg.Feature.Name)
 		}
 	}
 
@@ -85,7 +82,6 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 	for _, pkg := range packagesMap {
 		packages = append(packages, pkg)
 	}
-
 	return packages, nil
 }
 

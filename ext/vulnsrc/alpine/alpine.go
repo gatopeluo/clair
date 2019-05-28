@@ -17,6 +17,7 @@
 package alpine
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -78,6 +79,7 @@ func (u *updater) Update(db database.Datastore) (resp vulnsrc.UpdateResponse, er
 	// Get the list of namespaces from the repository.
 	var namespaces []string
 	namespaces, err = ls(u.repositoryLocalPath, directoriesOnly)
+	fmt.Println(namespaces)
 	if err != nil {
 		return
 	}

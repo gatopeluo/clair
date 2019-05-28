@@ -64,9 +64,12 @@ func (pgSQL *pgSQL) insertFeature(feature database.Feature) (int, error) {
 }
 
 func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, err error) {
-	err = versionfmt.Valid(fv.Feature.Namespace.VersionFormat, fv.Version)
-	if err != nil {
-		return 0, commonerr.NewBadRequestError("could not find/insert invalid FeatureVersion")
+	// Check validity of versioning
+	if fv.VersionFormat == "dpkg" {
+		err := versionfmt.Valid(fv.VersionFormat, fv.Version)
+		if err != nil {
+			return 0, commonerr.NewBadRequestError("could not find/insert invalid FeatureVersion")
+		}
 	}
 
 	// Do cache lookup.
@@ -102,9 +105,9 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	//
 	// In a populated database, the likelihood of the FeatureVersion already being there is high.
 	// If we can find it here, we then avoid using a transaction and locking the database.
-	err = pgSQL.QueryRow(searchFeatureVersion, featureID, fv.Version, fv.VersionFormat).Scan(&fv.ID)
+	err = pgSQL.QueryRow(searchFeatureVersion, featureID, fv.Version, vF).Scan(&fv.ID)
 	if err != nil && err != sql.ErrNoRows {
-		fmt.Println(err)
+		fmt.Println("error ", err)
 		return 0, handleError("searchFeatureVersion", err)
 	}
 
@@ -112,7 +115,6 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 		if pgSQL.cache != nil {
 			pgSQL.cache.Add(cacheIndex, fv.ID)
 		}
-
 		return fv.ID, nil
 	}
 
@@ -120,6 +122,7 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	tx, err := pgSQL.Begin()
 	if err != nil {
 		tx.Rollback()
+		fmt.Println(err)
 		return 0, handleError("insertFeatureVersion.Begin()", err)
 	}
 
@@ -140,11 +143,12 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	var created bool
 
 	t = time.Now()
-	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version, fv.VersionFormat).Scan(&created, &fv.ID)
+	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version, vF).Scan(&created, &fv.ID)
 	observeQueryTime("insertFeatureVersion", "soiFeatureVersion", t)
 
 	if err != nil {
 		tx.Rollback()
+		fmt.Println(err)
 		return 0, handleError("soiFeatureVersion", err)
 	}
 

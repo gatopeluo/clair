@@ -17,7 +17,6 @@ package v1
 import (
 	"compress/gzip"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -105,8 +104,6 @@ func postLayer(w http.ResponseWriter, r *http.Request, p httprouter.Params, ctx 
 		return postLayerRoute, http.StatusBadRequest
 	}
 
-	fmt.Println(request.Layer.Name + "\n")
-	fmt.Println(request.Layer.ParentName + "\n")
 	if request.Layer == nil {
 		writeResponse(w, r, http.StatusBadRequest, LayerEnvelope{Error: &Error{"failed to provide layer"}})
 		return postLayerRoute, http.StatusBadRequest

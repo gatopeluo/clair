@@ -21,7 +21,6 @@ package aptsources
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 
 	"github.com/gatopeluo/clair/database"
@@ -39,7 +38,6 @@ func init() {
 func (d detector) Detect(files tarutil.FilesMap) (*database.Namespace, error) {
 	f, hasFile := files["etc/apt/sources.list"]
 	if !hasFile {
-		fmt.Println(hasFile)
 		return nil, nil
 	}
 

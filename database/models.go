@@ -44,9 +44,9 @@ type Namespace struct {
 
 type Feature struct {
 	Model
-
-	Name      string
-	Namespace Namespace
+	VersionFormat string
+	Name          string
+	Namespace     Namespace
 }
 
 type FeatureVersion struct {

@@ -108,7 +108,7 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 		log.WithFields(log.Fields{logLayerName: name, "past engine version": layer.EngineVersion, "current engine version": Version}).Debug("layer content has already been processed in the past with older engine. analyzing again")
 	}
 
-	// Analyze //fmt.Println(PipRoutes)the content.
+	// Analyze the content.
 	layer.Namespace, layer.Features, err = detectContent(imageFormat, name, path, headers, layer.Parent)
 	if err != nil {
 		return err
@@ -122,7 +122,6 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 func detectContent(imageFormat, name, path string, headers map[string]string, parent *database.Layer) (namespace *database.Namespace, featureVersions []database.FeatureVersion, err error) {
 	totalRequiredFiles := append(featurefmt.RequiredFilenames(), featurens.RequiredFilenames()...)
 	//files, err := imagefmt.Extract(imageFormat, path, headers, []string{""})
-	fmt.Println(totalRequiredFiles)
 	files, err := imagefmt.Extract(imageFormat, path, headers, totalRequiredFiles)
 
 	if err != nil {
@@ -143,7 +142,6 @@ func detectContent(imageFormat, name, path string, headers map[string]string, pa
 		return
 	}
 	if len(featureVersions) > 0 {
-		fmt.Println(len(featureVersions))
 		log.WithFields(log.Fields{logLayerName: name, "feature count": len(featureVersions)}).Debug("detected features")
 	}
 
@@ -159,7 +157,6 @@ func detectNamespace(name string, files tarutil.FilesMap, parent *database.Layer
 		log.WithFields(log.Fields{logLayerName: name, "detected namespace": namespace.Name}).Debug("detected namespace")
 		return
 	}
-	fmt.Println("no namespace detected =(")
 
 	// Fallback to the parent's namespace.
 	if parent != nil {
@@ -202,7 +199,6 @@ func detectFeatureVersions(name string, files tarutil.FilesMap, namespace *datab
 
 	// Ensure that each FeatureVersion has an associated Namespace.
 	for i, feature := range features {
-		//fmt.Println("feature: " + feature.Feature.Name + " " + feature.Version)
 		if feature.Feature.Namespace.Name != "" {
 			// There is a Namespace associated.
 			continue

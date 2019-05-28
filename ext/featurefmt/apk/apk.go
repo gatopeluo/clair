@@ -18,7 +18,6 @@ package apk
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 
 	log "github.com/sirupsen/logrus"
 
@@ -37,7 +36,6 @@ type lister struct{}
 
 func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 	file, exists := files["lib/apk/db/installed"]
-	fmt.Println("apk ", len(files))
 	if !exists {
 		return []database.FeatureVersion{}, nil
 	}
@@ -46,7 +44,7 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 	// package into a feature that will be stored in a set to guarantee
 	// uniqueness.
 	pkgSet := make(map[string]database.FeatureVersion)
-	ipkg := database.FeatureVersion{}
+	pkg := database.FeatureVersion{}
 	scanner := bufio.NewScanner(bytes.NewBuffer(file))
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -57,34 +55,34 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 		// Parse the package name or version.
 		switch {
 		case line[:2] == "P:":
-			ipkg.Feature.Name = line[2:]
+			pkg.Feature.Name = line[2:]
 		case line[:2] == "V:":
 			version := string(line[2:])
 			err := versionfmt.Valid(dpkg.ParserName, version)
 			if err != nil {
 				log.WithError(err).WithField("version", version).Warning("could not parse package version. skipping")
 			} else {
-				ipkg.Version = version
-				ipkg.VersionFormat = "apk"
+				pkg.Version = version
+				pkg.VersionFormat = "apk"
 			}
 		case line == "":
 			// Restart if the parser reaches another package definition before
 			// creating a valid package.
-			ipkg = database.FeatureVersion{}
+			pkg = database.FeatureVersion{}
 		}
 
 		// If we have a whole feature, store it in the set and try to parse a new
 		// one.
-		if ipkg.Feature.Name != "" && ipkg.Version != "" {
-			pkgSet[ipkg.Feature.Name+"#"+ipkg.Version] = ipkg
-			ipkg = database.FeatureVersion{}
+		if pkg.Feature.Name != "" && pkg.Version != "" {
+			pkgSet[pkg.Feature.Name+"#"+pkg.Version] = pkg
+			pkg = database.FeatureVersion{}
 		}
 	}
 
 	// Convert the map into a slice.
 	pkgs := make([]database.FeatureVersion, 0, len(pkgSet))
-	for _, pkg := range pkgSet {
-		pkgs = append(pkgs, pkg)
+	for _, p := range pkgSet {
+		pkgs = append(pkgs, p)
 	}
 
 	return pkgs, nil

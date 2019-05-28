@@ -17,6 +17,7 @@
 package featurens
 
 import (
+	"fmt"
 	"sync"
 	"testing"
 
@@ -75,6 +76,7 @@ func Detect(files tarutil.FilesMap) (*database.Namespace, error) {
 	defer detectorsM.RUnlock()
 
 	for name, detector := range detectors {
+		fmt.Println(name)
 		namespace, err := detector.Detect(files)
 		if err != nil {
 			log.WithError(err).WithField("name", name).Warning("failed while attempting to detect namespace")

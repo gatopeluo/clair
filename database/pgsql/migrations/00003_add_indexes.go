@@ -23,7 +23,7 @@ func init() {
 			`CREATE UNIQUE INDEX namespace_name_key ON Namespace (name);`,
 			`CREATE INDEX vulnerability_name_idx ON Vulnerability (name);`,
 			`CREATE INDEX vulnerability_namespace_id_name_idx ON Vulnerability (namespace_id, name);`,
-			`CREATE UNIQUE INDEX featureversion_feature_id_version_key ON FeatureVersion (feature_id, version);`,
+			`CREATE INDEX featureversion_feature_id_version_key ON FeatureVersion (feature_id, version);`,
 		}),
 		Down: migrate.Queries([]string{
 			`DROP INDEX namespace_name_key;`,

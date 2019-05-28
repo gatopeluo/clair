@@ -16,8 +16,10 @@
 package httputil
 
 import (
+	"fmt"
 	"net"
 	"net/http"
+	"runtime"
 	"strings"
 
 	"github.com/gatopeluo/clair/pkg/version"
@@ -62,4 +64,27 @@ func GetClientAddr(r *http.Request) string {
 // Status2xx returns true if the response's status code is success (2xx)
 func Status2xx(resp *http.Response) bool {
 	return resp.StatusCode/100 == 2
+}
+
+// GetWithSingularityUseAgent returns the user-agent needed for the comunication with the shub api
+func GetWithSingularityUseAgent() string {
+
+	agentValue := fmt.Sprintf("%v (%v %v) %v",
+		singularityVersion("singularity", "3.1.0-518.g17272e01e"),
+		strings.Title(runtime.GOOS),
+		runtime.GOARCH,
+		goVersion())
+
+	return agentValue
+}
+
+func singularityVersion(name, version string) string {
+	product := strings.Title(name)
+	ver := strings.Split(version, "-")[0]
+	return fmt.Sprintf("%v/%v", product, ver)
+}
+
+func goVersion() string {
+	version := strings.TrimPrefix(runtime.Version(), "go")
+	return fmt.Sprintf("Go/%v", version)
 }

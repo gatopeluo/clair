@@ -17,7 +17,6 @@ package dpkg
 
 import (
 	"bufio"
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -43,7 +42,6 @@ func init() {
 
 func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 	f, hasFile := files["var/lib/dpkg/status"]
-	fmt.Println("dpkg ", len(files))
 	if !hasFile {
 		return []database.FeatureVersion{}, nil
 	}
@@ -104,9 +102,11 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 
 		// Add the package to the result array if we have all the informations
 		if pkg.Feature.Name != "" && pkg.Version != "" {
+			pkg.VersionFormat = "dpkg"
 			packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
 			pkg.Feature.Name = ""
 			pkg.Version = ""
+			pkg.VersionFormat = ""
 		}
 	}
 

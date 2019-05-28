@@ -50,11 +50,13 @@ import (
 	_ "github.com/gatopeluo/clair/ext/featurens/redhatrelease"
 	_ "github.com/gatopeluo/clair/ext/imagefmt/aci"
 	_ "github.com/gatopeluo/clair/ext/imagefmt/docker"
+	_ "github.com/gatopeluo/clair/ext/imagefmt/singularity"
 	_ "github.com/gatopeluo/clair/ext/notification/webhook"
 	_ "github.com/gatopeluo/clair/ext/vulnmdsrc/nvd"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/alpine"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/debian"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/oracle"
+	_ "github.com/gatopeluo/clair/ext/vulnsrc/python"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/rhel"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/ubuntu"
 )
