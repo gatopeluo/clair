@@ -137,6 +137,7 @@ func ConvertImage(filename string, unsquashfsPath string) (string, error) {
 		return "", fmt.Errorf("could not create temporary sandbox: %s", err)
 	}
 
+	fmt.Println(dir)
 	// extract root filesystem
 	if err := s.ExtractAll(reader, dir); err != nil {
 		os.RemoveAll(dir)

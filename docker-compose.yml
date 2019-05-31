@@ -10,7 +10,7 @@ services:
   clair:
     container_name: clair_clair
     image: gatopeluo-clair:latest
-    restart: unless-stopped
+    # restart: unless-stopped
     depends_on:
       - postgres
     ports:
@@ -20,4 +20,4 @@ services:
     volumes:
       - /tmp:/tmp
       - ./clair_config:/config
-    command: [-config, /config/config.yaml]
+    command: [-config, config.yaml]

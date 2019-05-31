@@ -12,18 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.10-alpine
+FROM golang:1.12.2-alpine
 
 VOLUME /config
 EXPOSE 6060 6061
 
 ADD .   /go/src/github.com/gatopeluo/clair/
+ADD config.yaml /
 WORKDIR /go/src/github.com/gatopeluo/clair/
 
 RUN apk add --no-cache git rpm xz && \
     export CLAIR_VERSION=$(git describe --always --tags --dirty) && \
     go install -ldflags "-X github.com/gatopeluo/clair/pkg/version.Version=$CLAIR_VERSION" -v github.com/gatopeluo/clair/cmd/clair && \
     mv /go/bin/clair /clair && \
+    ln -s /clair /usr/bin/clair && \
     rm -rf /go /usr/local/go
 
-ENTRYPOINT ["/clair"]
+CMD ["clair","-config=/config.yaml"]
