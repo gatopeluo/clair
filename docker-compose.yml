@@ -5,11 +5,11 @@ services:
     image: postgres:latest
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: 
 
   clair:
     container_name: clair_clair
-    image: quay.io/coreos/clair-git:latest
+    image: gatopeluo-clair:latest
     restart: unless-stopped
     depends_on:
       - postgres

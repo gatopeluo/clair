@@ -6,9 +6,13 @@
 package client
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -16,6 +20,19 @@ import (
 	"github.com/sylabs/singularity/pkg/image"
 	"github.com/sylabs/singularity/pkg/image/unpacker"
 )
+
+// JSONError - Struct for standard error returns over REST API
+type JSONError struct {
+	Code    int    `json:"code,omitempty"`
+	Status  string `json:"status,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+
+// JSONResponse - Top level container of a REST API response
+type JSONResponse struct {
+	Data  interface{} `json:"data"`
+	Error JSONError   `json:"error,omitempty"`
+}
 
 // isShubPullRef returns true if the provided string is a valid Shub
 // reference for a pull operation.
@@ -85,6 +102,7 @@ func shubParseReference(src string) (uri ShubURI, err error) {
 	return uri, nil
 }
 
+//ConvertImage turns a singularity image into a directory
 func ConvertImage(filename string, unsquashfsPath string) (string, error) {
 	img, err := image.Init(filename, false)
 	if err != nil {
@@ -126,4 +144,24 @@ func ConvertImage(filename string, unsquashfsPath string) (string, error) {
 	}
 
 	return dir, err
+}
+
+// ParseErrorResponse - Create a JSONResponse out of a raw HTTP response
+func ParseErrorResponse(res *http.Response) (jRes JSONResponse) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(res.Body)
+	s := buf.String()
+	jRes.Error.Code = res.StatusCode
+	jRes.Error.Status = http.StatusText(res.StatusCode)
+	jRes.Error.Message = s
+	return jRes
+}
+
+// ParseErrorBody - Parse an API format error out of the body
+func ParseErrorBody(r io.Reader) (jRes JSONResponse, err error) {
+	err = json.NewDecoder(r).Decode(&jRes)
+	if err != nil {
+		return jRes, fmt.Errorf("The server returned a response that could not be decoded: %v", err)
+	}
+	return jRes, nil
 }

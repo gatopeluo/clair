@@ -56,7 +56,8 @@ import (
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/alpine"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/debian"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/oracle"
-	_ "github.com/gatopeluo/clair/ext/vulnsrc/python"
+
+	//_ "github.com/gatopeluo/clair/ext/vulnsrc/python"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/rhel"
 	_ "github.com/gatopeluo/clair/ext/vulnsrc/ubuntu"
 )

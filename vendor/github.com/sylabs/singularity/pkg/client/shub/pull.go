@@ -12,7 +12,6 @@ import (
 	"os"
 	"time"
 
-	util "github.com/sylabs/singularity/pkg/client/library"
 	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
@@ -75,9 +74,9 @@ func DownloadImage(filePath string, shubRef string, force, noHTTPS bool, agentVa
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		jRes, err := util.ParseErrorBody(resp.Body)
+		jRes, err := ParseErrorBody(resp.Body)
 		if err != nil {
-			jRes = util.ParseErrorResponse(resp)
+			jRes = ParseErrorResponse(resp)
 		}
 		return "", fmt.Errorf("Download did not succeed: %d %s\n\t%v",
 			jRes.Error.Code, jRes.Error.Status, jRes.Error.Message)

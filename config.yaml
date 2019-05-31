@@ -64,6 +64,7 @@ clair:
       - dpkg
       - rpm
       - pip
+      - npm
       
   updater:
     # Frequency the database will be updated with vulnerabilities from the default data sources

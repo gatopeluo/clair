@@ -95,10 +95,7 @@ func (u *updater) Update(db database.Datastore) (resp vulnsrc.UpdateResponse, er
 		}
 	}
 
-	//resp.Vulnerabilities = vulns
-	fmt.Println(vulns[0])
-	fmt.Println(vulns[1])
-	fmt.Println(vulns[10])
+	resp.Vulnerabilities = vulns
 
 	u.Clean()
 	return
@@ -151,6 +148,7 @@ func (u *updater) pull() (commit string, err error) {
 
 func (u *updater) addingVulns(pkgName string, v SafetyVuln) (dbv []database.Vulnerability) {
 	for _, nsName := range ns {
+		vVersion := strings.Split(v.Version, ",")[0]
 		var vuln database.Vulnerability
 		vuln.Severity = database.UnknownSeverity
 		vuln.Name = v.Cve
@@ -164,7 +162,7 @@ func (u *updater) addingVulns(pkgName string, v SafetyVuln) (dbv []database.Vuln
 					},
 					Name: pkgName,
 				},
-				Version: strings.Trim(v.Version, "<>"),
+				Version: strings.Trim(vVersion, "<>"),
 			},
 		}
 		dbv = append(dbv, vuln)
