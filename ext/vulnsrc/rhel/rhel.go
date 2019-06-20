@@ -27,12 +27,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/versionfmt"
-	"github.com/gatopeluo/clair/ext/versionfmt/rpm"
-	"github.com/gatopeluo/clair/ext/vulnsrc"
-	"github.com/gatopeluo/clair/pkg/commonerr"
-	"github.com/gatopeluo/clair/pkg/httputil"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/versionfmt"
+	"github.com/tigonza/clair/ext/versionfmt/rpm"
+	"github.com/tigonza/clair/ext/vulnsrc"
+	"github.com/tigonza/clair/pkg/commonerr"
+	"github.com/tigonza/clair/pkg/httputil"
 )
 
 const (

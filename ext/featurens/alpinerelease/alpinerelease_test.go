@@ -17,9 +17,9 @@ package alpinerelease
 import (
 	"testing"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/featurens"
-	"github.com/coreos/clair/pkg/tarutil"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/featurens"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 func TestDetector(t *testing.T) {

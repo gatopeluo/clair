@@ -10,8 +10,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/vulnsrc"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/vulnsrc"
 )
 
 const (

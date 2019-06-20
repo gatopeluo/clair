@@ -11,12 +11,12 @@ Please use [releases] instead of the `master` branch in order to get stable bina
 
 ![Clair Logo](https://cloud.githubusercontent.com/assets/343539/21630811/c5081e5c-d202-11e6-92eb-919d5999c77a.png)
 
-Clair is an open source project for the static analysis of vulnerabilities in application containers (currently including [appc] and [docker]).
+Clair is an open source project for the [static analysis] of vulnerabilities in application containers (currently including [appc] and [docker]).
 
 1. In regular intervals, Clair ingests vulnerability metadata from a configured set of sources and stores it in the database.
-2. Clients use the Clair API to index their container images; this parses a list of installed _source packages_ and stores them in the database.
-3. Clients use the Clair API to query the database; correlating data is done in real time, rather than a cached result that needs re-scanning.
-4. When updates to vulnerability metadata occur, a webhook containg the affected images can be configured to page or block deployments.
+2. Clients use the Clair API to index their container images; this creates a list of _features_ present in the image and stores them in the database.
+3. Clients use the Clair API to query the database for vulnerabilities of a particular image; correlating vulnerabilities and features is done for each request, avoiding the need to rescan images.
+4. When updates to vulnerability metadata occur, a notification can be sent to alert systems that a change has occured.
 
 Our goal is to enable a more transparent view of the security of container-based infrastructure.
 Thus, the project was named `Clair` after the French term which translates to *clear*, *bright*, *transparent*.
@@ -24,25 +24,36 @@ Thus, the project was named `Clair` after the French term which translates to *c
 [appc]: https://github.com/appc/spec
 [docker]: https://github.com/docker/docker/blob/master/image/spec/v1.2.md
 [releases]: https://github.com/coreos/clair/releases
+[static analysis]: https://en.wikipedia.org/wiki/Static_program_analysis
 
-## When would I use Clair?
+## Getting Started
 
-* You've found an image by searching the internet and want to determine if it's safe enough for you to use in production.
-* You're regularly deploying into a containerized production environment and want operations to alert or block deployments on insecure software.
+* Learn [the terminology] and about the [drivers and data sources] that power Clair
+* Watch [presentations] on the high-level goals and design of Clair
+* Follow instructions to get Clair [up and running]
+* Explore [the API] on SwaggerHub
+* Discover third party [integrations] that help integrate Clair with your infrastructure
+* Read the rest of the documentation on the [CoreOS website] or in the [Documentation directory]
 
-## Documentation
+[the terminology]: /Documentation/terminology.md
+[drivers and data sources]: /Documentation/drivers-and-data-sources.md
+[presentations]: /Documentation/presentations.md
+[up and running]: /Documentation/running-clair.md
+[the API]: https://app.swaggerhub.com/apis/coreos/clair/3.0
+[integrations]: /Documentation/integrations.md
+[CoreOS website]: https://coreos.com/clair/docs/latest/
+[Documentation directory]: /Documentation
 
-* [The CoreOS website] has a rendered version of the latest stable documentation
-* [Inside the Documentation directory] is the source markdown files for documentation
+## Contact
 
-[The CoreOS website]: https://coreos.com/clair/docs/latest/
-[Inside the Documentation directory]: /Documentation
+- IRC: #[clair](irc://irc.freenode.org:6667/#clair) on freenode.org
+- Bugs: [issues](https://github.com/coreos/clair/issues)
 
-## Deploying Clair
+## Contributing
 
-### Container Repositories
+See [CONTRIBUTING](.github/CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
 
-Clair is officially packaged and released as a container.
+## License
 
 * [quay.io/coreos/clair] - Stable releases
 * [quay.io/coreos/clair-jwt] - Stable releases with an embedded instance of [jwtproxy]

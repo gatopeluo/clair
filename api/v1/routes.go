@@ -26,10 +26,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair"
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/pkg/commonerr"
-	"github.com/gatopeluo/clair/pkg/tarutil"
+	"github.com/tigonza/clair"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/pkg/commonerr"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 const (

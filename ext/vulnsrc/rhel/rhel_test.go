@@ -20,9 +20,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/versionfmt/rpm"
 	"github.com/stretchr/testify/assert"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/versionfmt/rpm"
 )
 
 func TestRHELParser(t *testing.T) {

@@ -32,9 +32,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/vulnmdsrc"
-	"github.com/gatopeluo/clair/pkg/commonerr"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/vulnmdsrc"
+	"github.com/tigonza/clair/pkg/commonerr"
 )
 
 const (

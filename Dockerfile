@@ -17,13 +17,13 @@ FROM golang:1.12.2-alpine
 VOLUME /config
 EXPOSE 6060 6061
 
-ADD .   /go/src/github.com/gatopeluo/clair/
+ADD .   /go/src/github.com/tigonza/clair/
 ADD config.yaml /
-WORKDIR /go/src/github.com/gatopeluo/clair/
+WORKDIR /go/src/github.com/tigonza/clair/
 
 RUN apk add --no-cache git rpm xz && \
     export CLAIR_VERSION=$(git describe --always --tags --dirty) && \
-    go install -ldflags "-X github.com/gatopeluo/clair/pkg/version.Version=$CLAIR_VERSION" -v github.com/gatopeluo/clair/cmd/clair && \
+    go install -ldflags "-X github.com/tigonza/clair/pkg/version.Version=$CLAIR_VERSION" -v github.com/tigonza/clair/cmd/clair && \
     mv /go/bin/clair /clair && \
     ln -s /clair /usr/bin/clair && \
     rm -rf /go /usr/local/go

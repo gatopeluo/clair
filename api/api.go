@@ -26,8 +26,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tylerb/graceful"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/pkg/stopper"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/pkg/stopper"
 )
 
 const timeoutResponse = `{"Error":{"Message":"Clair failed to respond within the configured timeout window.","Type":"Timeout"}}`

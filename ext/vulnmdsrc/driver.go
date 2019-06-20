@@ -19,7 +19,7 @@ package vulnmdsrc
 import (
 	"sync"
 
-	"github.com/gatopeluo/clair/database"
+	"github.com/tigonza/clair/database"
 )
 
 var (

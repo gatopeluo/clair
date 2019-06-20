@@ -26,8 +26,8 @@ import (
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/versionfmt/dpkg"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/versionfmt/dpkg"
 )
 
 const (

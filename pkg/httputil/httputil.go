@@ -22,7 +22,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gatopeluo/clair/pkg/version"
+	"github.com/tigonza/clair/pkg/version"
 )
 
 // GetWithUserAgent performs an HTTP GET with the proper Clair User-Agent.

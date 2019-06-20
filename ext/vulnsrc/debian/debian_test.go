@@ -20,10 +20,10 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/versionfmt"
-	"github.com/coreos/clair/ext/versionfmt/dpkg"
 	"github.com/stretchr/testify/assert"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/versionfmt"
+	"github.com/tigonza/clair/ext/versionfmt/dpkg"
 )
 
 func TestDebianParser(t *testing.T) {

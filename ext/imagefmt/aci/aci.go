@@ -20,8 +20,8 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/gatopeluo/clair/ext/imagefmt"
-	"github.com/gatopeluo/clair/pkg/tarutil"
+	"github.com/tigonza/clair/ext/imagefmt"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 type format struct{}

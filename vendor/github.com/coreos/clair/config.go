@@ -20,10 +20,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/gatopeluo/clair"
-	"github.com/gatopeluo/clair/api"
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/notification"
+	fernet "github.com/fernet/fernet-go"
+	"github.com/tigonza/clair"
+	"github.com/tigonza/clair/api"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/notification"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // ErrDatasourceNotLoaded is returned when the datasource variable in the

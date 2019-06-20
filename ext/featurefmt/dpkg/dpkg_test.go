@@ -17,9 +17,9 @@ package dpkg
 import (
 	"testing"
 
-	"github.com/coreos/clair/database"
-	"github.com/coreos/clair/ext/featurefmt"
-	"github.com/coreos/clair/pkg/tarutil"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/featurefmt"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 func TestDpkgFeatureDetection(t *testing.T) {

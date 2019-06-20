@@ -19,7 +19,7 @@ package pip
 import (
 	"errors"
 
-	"github.com/gatopeluo/clair/ext/versionfmt"
+	"github.com/tigonza/clair/ext/versionfmt"
 )
 
 // ParserName is the name by which the pip parser is registered.

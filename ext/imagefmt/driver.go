@@ -33,10 +33,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair/pkg/commonerr"
-	"github.com/gatopeluo/clair/pkg/httputil"
-	"github.com/gatopeluo/clair/pkg/tarutil"
 	sing "github.com/sylabs/singularity/pkg/client/shub"
+	"github.com/tigonza/clair/pkg/commonerr"
+	"github.com/tigonza/clair/pkg/httputil"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 var (

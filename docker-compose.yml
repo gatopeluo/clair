@@ -9,7 +9,7 @@ services:
 
   clair:
     container_name: clair_clair
-    image: gatopeluo-clair:latest
+    image: tigonza-clair:latest
     # restart: unless-stopped
     depends_on:
       - postgres

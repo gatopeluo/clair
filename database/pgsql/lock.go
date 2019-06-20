@@ -19,7 +19,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair/pkg/commonerr"
+	"github.com/tigonza/clair/pkg/commonerr"
 )
 
 // Lock tries to set a temporary lock in the database.

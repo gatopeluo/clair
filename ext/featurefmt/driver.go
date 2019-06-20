@@ -24,9 +24,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/pkg/tarutil"
 	"github.com/stretchr/testify/assert"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/pkg/tarutil"
 )
 
 var (

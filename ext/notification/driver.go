@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gatopeluo/clair/database"
+	"github.com/tigonza/clair/database"
 )
 
 var (

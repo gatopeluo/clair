@@ -23,8 +23,8 @@ import (
 
 	"github.com/fernet/fernet-go"
 
-	"github.com/gatopeluo/clair/database"
-	"github.com/gatopeluo/clair/ext/versionfmt"
+	"github.com/tigonza/clair/database"
+	"github.com/tigonza/clair/ext/versionfmt"
 )
 
 type Error struct {

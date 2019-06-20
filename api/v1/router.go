@@ -24,7 +24,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gatopeluo/clair/database"
+	"github.com/tigonza/clair/database"
 )
 
 var (

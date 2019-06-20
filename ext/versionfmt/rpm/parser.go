@@ -24,7 +24,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/gatopeluo/clair/ext/versionfmt"
+	"github.com/tigonza/clair/ext/versionfmt"
 )
 
 // ParserName is the name by which the rpm parser is registered.
