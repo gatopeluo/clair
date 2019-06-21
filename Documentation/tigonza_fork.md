@@ -15,11 +15,11 @@ This fork presents the addition of 3 new drivers to the v2.0.6 version of clair
 
 
 
-## USAGE
+## Usage
 
-This version of clair functions just the same as the original of the same version would, with the exception of the added possibility of having another "image format".  This refering to the .simg archiving standard for singularity. 
+This version of clair's API functions just the same as the [original  of the same version](https://github.com/tigonza/clair/Documentation/api_v1.md) would, with the exception of the added possibility of having another "image format".  This refering to the .simg archiving standard for singularity. 
 
-A simple example of a POST query that pushes a singularity-hub image to clair would be:
+A simple example of the body of a POST query that pushes a singularity-hub image to clair would be:
 
 ```json
 {"Layer":{
