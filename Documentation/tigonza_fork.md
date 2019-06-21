@@ -13,19 +13,32 @@ The data model has been modified so that there can be more than one active featu
 
 This fork presents the addition of 3 new drivers to the v2.0.6 version of clair
 
+
+
+## USAGE
+
+This version of clair functions just the same as the original of the same version would, with the exception of the added possibility of having another "image format".  This refering to the .simg archiving standard for singularity. 
+
+A simple example of a POST query that pushes a singularity-hub image to clair would be:
+
 ```json
-{
-  "Notification": {
-    "Name": "6e4ad270-4957-4242-b5ad-dad851379573"
-  }
+{"Layer":{
+	"Name":"CF6393C20357A8003115ADED3D873D7C543387AF7BEF6A93FBB578FF09EF6ED5",
+	"Path":"shub://jdwheaton/singularity-ngs",
+	"ParentName":"",
+	"Format":"Singularity",
+	}
 }
+
 ```
 
-## Custom Notifiers
+Since singularity doesn't add up the layers on top of each other, opting instead for an entire image, we push it to clair as a one layer image.
+In short, just change the format from Docker to Singularity and dont add the hash for the parent layer.
 
+<!-- 
 Clair can also be compiled with custom notifiers by importing them in `main.go`.
 Custom notifiers are any Go package that implements the `Notifier` interface and registers themselves with the `notifier` package.
 Notifiers are registered in [init()] similar to drivers for Go's standard [database/sql] package.
 
 [init()]: https://golang.org/doc/effective_go.html#init
-[database/sql]: https://godoc.org/database/sql
+[database/sql]: https://godoc.org/database/sql -->
