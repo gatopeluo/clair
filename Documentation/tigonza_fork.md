@@ -2,7 +2,7 @@
 
 This is a fork for the v2.0.6 tag of clair. It brings changes to small interactions within the main package 
 along with some changes within its utility packages. It mostly focuses on adding new drivers and expanding
-the amounts of data that clair is capable of collecting. refer to the documentation on the README.md on the 
+the amounts of data that clair is capable of collecting. refer to the documentation on the [README](https://github.com/tigonza/clair/blob/Devel2.0/README.md) on the 
 main directory for info on the development of drivers for clair.
 
 ## Data Model Customizations
