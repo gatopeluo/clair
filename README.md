@@ -26,6 +26,9 @@ Thus, the project was named `Clair` after the French term which translates to *c
 [releases]: https://github.com/coreos/clair/releases
 [static analysis]: https://en.wikipedia.org/wiki/Static_program_analysis
 
+## Tigonza's Fork
+To learn about the specifics of this fork refer to the markdown by this name on the Documentation page ([or by clicking here](https://github.com/tigonza/clair/blob/Devel2.0/Documentation/tigonza_fork.md)).
+
 ## Getting Started
 
 * Learn [the terminology] and about the [drivers and data sources] that power Clair
