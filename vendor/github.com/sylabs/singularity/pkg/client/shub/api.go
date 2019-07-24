@@ -57,7 +57,6 @@ func getManifest(uri ShubURI, noHTTPS bool, agentValue string) (manifest ShubAPI
 	}
 
 	// Create the request, add headers context
-	fmt.Println(uri.registry + uri.user + "/" + uri.container + uri.tag + uri.digest)
 	url, err := url.Parse(uri.registry + uri.user + "/" + uri.container + uri.tag + uri.digest)
 	if err != nil {
 		return ShubAPIResponse{}, err

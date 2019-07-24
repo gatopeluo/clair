@@ -57,7 +57,7 @@ import (
 	_ "github.com/tigonza/clair/ext/vulnsrc/debian"
 	_ "github.com/tigonza/clair/ext/vulnsrc/oracle"
 
-	//_ "github.com/tigonza/clair/ext/vulnsrc/python"
+	// _ "github.com/tigonza/clair/ext/vulnsrc/python"
 	_ "github.com/tigonza/clair/ext/vulnsrc/rhel"
 	_ "github.com/tigonza/clair/ext/vulnsrc/ubuntu"
 )

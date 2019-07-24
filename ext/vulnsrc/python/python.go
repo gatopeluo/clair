@@ -4,11 +4,13 @@ package python
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/tigonza/clair/database"
 	"github.com/tigonza/clair/ext/vulnsrc"
@@ -65,8 +67,9 @@ func (u *updater) Update(db database.Datastore) (resp vulnsrc.UpdateResponse, er
 	// Here's where the issue starts. Since vulnerabilities are linked not to
 	// features directly but to namespaces first; just like with versionfmt, it
 	// becomes impossible to update the database without either:
-	// 		a) Waiting for a layer to be processed first, or
-	// 		b) just adding them to each namespace, for each vulnerabilitie.
+	// 		a) Waiting for a layer to be processed first;
+	// 		b) just adding them to each namespace, for each vulnerabilitie;
+	//		c) or figuring out wich namespace is involved with each CVE one by one (probably manually).
 	if u.repositoryLocalPath == "" {
 		return
 	}
@@ -74,8 +77,7 @@ func (u *updater) Update(db database.Datastore) (resp vulnsrc.UpdateResponse, er
 	// Open our vulnerabilitie data
 	full, err := os.Open(u.repositoryLocalPath + "/data/insecure_full.json")
 	if err != nil {
-		fmt.Println(err)
-		return
+		return vulnsrc.UpdateResponse{}, fmt.Errorf("Can't open database")
 	}
 	defer full.Close()
 	byteValue, _ := ioutil.ReadAll(full)
@@ -88,6 +90,7 @@ func (u *updater) Update(db database.Datastore) (resp vulnsrc.UpdateResponse, er
 	var vulns []database.Vulnerability
 
 	for name, vs := range result {
+		fmt.Println(name)
 		for _, v := range vs {
 			if v.Cve != "" {
 				vulns = u.addingVulns(name, v)
@@ -168,4 +171,56 @@ func (u *updater) addingVulns(pkgName string, v SafetyVuln) (dbv []database.Vuln
 		dbv = append(dbv, vuln)
 	}
 	return
+}
+
+type Entry struct {
+	XMLName          xml.Name    `xml:"entry" json:"-" sql:"-"`
+	ID               int64       `xml:"-" json:"-"`
+	CVEId            string      `xml:"id,attr" json:"id"`
+	PublishedDate    time.Time   `xml:"published-datetime" json:"published_date"`
+	LastModifiedDate time.Time   `xml:"last-modified-datetime" json:"last_modified_date"`
+	CVSS             CVSS        `xml:"cvss>base_metrics" json:"cvss"`
+	Products         []string    `xml:"vulnerable-software-list>product" json:"products" sql:"-"`
+	Summary          string      `xml:"summary" json:"summary"`
+	References       []Reference `xml:"references" json:"references"`
+}
+
+type CVSS struct {
+	ID                    int64     `xml:"-" json:"-"`
+	EntryID               int64     `xml:"-" json:"-"`
+	Score                 string    `xml:"score" json:"score"`
+	AccessVector          string    `xml:"access-vector" json:"access_vector"`
+	AccessComplexity      string    `xml:"access-complexity" json:"access_complexity"`
+	Authentication        string    `xml:"authentication" json:"authentication"`
+	ConfidentialityImpact string    `xml:"confidentiality-impact" json:"confidentiality_impact"`
+	IntegrityImpact       string    `xml:"integrity-impact" json:"integrity_impact"`
+	AvailabilityImpact    string    `xml:"availability-impact" json:"availability_impact"`
+	Source                string    `xml:"source" json:"source"`
+	GeneratedOnDate       time.Time `xml:"generated-on-datetime" json:"generated_on_date"`
+}
+
+type Reference struct {
+	ID      int64  `xml:"-" json:"-"`
+	EntryID int64  `xml:"-" json:"-"`
+	Type    string `xml:"reference_type,attr" json:"type"`
+	Source  string `xml:"source" json:"source"`
+	Link    Link   `xml:"reference" json:"link"`
+	LinkID  int64  `xml:"-" json:"-"`
+}
+
+//TableName is needed since "references" is a sqlite keyword.
+func (r Reference) TableName() string {
+	return "reference_list"
+}
+
+type Link struct {
+	ID    int64  `xml:"-" json:"-"`
+	Value string `xml:",chardata" json:"value"`
+	Href  string `xml:"href,attr" json:"href"`
+}
+
+type Product struct {
+	ID      int64 `xml:"-" json:"-"`
+	EntryID int64 `xml:"-" json:"-"`
+	Value   string
 }

@@ -61,7 +61,7 @@ func LayerFromDatabaseModel(dbLayer database.Layer, withFeatures, withVulnerabil
 			feature := Feature{
 				Name:          dbFeatureVersion.Feature.Name,
 				NamespaceName: dbFeatureVersion.Feature.Namespace.Name,
-				VersionFormat: dbFeatureVersion.Feature.VersionFormat,
+				VersionFormat: dbFeatureVersion.VersionFormat,
 				Version:       dbFeatureVersion.Version,
 				AddedBy:       dbFeatureVersion.AddedBy.Name,
 			}

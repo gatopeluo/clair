@@ -57,7 +57,7 @@ type FeatureVersion struct {
 	Version       string
 	AffectedBy    []Vulnerability
 
-	// For output purposes. Only make sense when the feature version is in the context of an image.
+	// For output purposes. Only makes sense when the feature version is in the context of an image.
 	AddedBy Layer
 }
 

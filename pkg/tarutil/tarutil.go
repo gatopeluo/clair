@@ -89,12 +89,15 @@ func ExtractFiles(r io.Reader, filenames []string) (FilesMap, error) {
 				break
 			}
 			//for either the npm or pip listers there's a different filecheck
-			if s == "pip" && strings.Contains(filename, "-info") {
+			if s == "pip" {
+				if strings.Contains(filename, "egg-info") || strings.Contains(filename, "dist-info") {
+					toBeExtracted = true
+					break
+				}
+			}
+			if s == "node" && strings.HasSuffix(filename, "package.json") {
 				toBeExtracted = true
 				break
-			}
-			if s == "node" && strings.Contains(filename, "node_modules") {
-				toBeExtracted = true
 			}
 		}
 

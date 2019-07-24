@@ -32,7 +32,7 @@ func DownloadImage(filePath string, shubRef string, force, noHTTPS bool, agentVa
 	}
 
 	if filePath == "" {
-		filePath = fmt.Sprintf("/tmp/%s_%s.simg", ShubURI.container, ShubURI.tag)
+		filePath = fmt.Sprintf("/home/tomasgonzalez/Documents/%s_%s.simg", ShubURI.container, ShubURI.tag)
 	}
 
 	if !force {
@@ -46,8 +46,6 @@ func DownloadImage(filePath string, shubRef string, force, noHTTPS bool, agentVa
 	if err != nil {
 		return "", fmt.Errorf("Failed to get manifest from Shub: %v", err)
 	}
-
-	fmt.Println("step 4 done, got manifest")
 
 	// Get the image based on the manifest
 	httpc := http.Client{

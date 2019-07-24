@@ -121,7 +121,6 @@ func ProcessLayer(datastore database.Datastore, imageFormat, name, parentName, p
 // Features.
 func detectContent(imageFormat, name, path string, headers map[string]string, parent *database.Layer) (namespace *database.Namespace, featureVersions []database.FeatureVersion, err error) {
 	totalRequiredFiles := append(featurefmt.RequiredFilenames(), featurens.RequiredFilenames()...)
-	//files, err := imagefmt.Extract(imageFormat, path, headers, []string{""})
 	files, err := imagefmt.Extract(imageFormat, path, headers, totalRequiredFiles)
 
 	if err != nil {

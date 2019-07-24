@@ -1,8 +1,3 @@
-// Copyright (c) 2018, Sylabs Inc. All rights reserved.
-// This software is licensed under a 3-clause BSD license. Please consult the
-// LICENSE.md file distributed with the sources of this project regarding your
-// rights to use or distribute this software.
-
 package client
 
 import (
@@ -126,10 +121,10 @@ func ConvertImage(filename string, unsquashfsPath string) (string, error) {
 	}
 
 	// keep compatibility with v2
-	tmpdir := os.Getenv("SINGULARITY_LOCALCACHEDIR")
-	if tmpdir == "" {
-		tmpdir = os.Getenv("SINGULARITY_CACHEDIR")
-	}
+	tmpdir := "/home/tomasgonzalez/Documents/"
+	// if tmpdir == "" {
+	// 	tmpdir = "/home/tomasgonzalez/Documents/"
+	// }
 
 	// create temporary sandbox
 	dir, err := ioutil.TempDir(tmpdir, "rootfs-")
@@ -137,7 +132,6 @@ func ConvertImage(filename string, unsquashfsPath string) (string, error) {
 		return "", fmt.Errorf("could not create temporary sandbox: %s", err)
 	}
 
-	fmt.Println(dir)
 	// extract root filesystem
 	if err := s.ExtractAll(reader, dir); err != nil {
 		os.RemoveAll(dir)

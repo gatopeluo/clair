@@ -17,15 +17,16 @@ type lister struct{}
 func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion, error) {
 
 	//get names of libs directories
-	names := []string{"egg-info", "dist-info"}
+	names := []string{"PKG-INFO", "METADATA", "egg-info"}
 
 	//Start checking for egg-info's
-	auxMap := make(map[string]string)
+	auxMap := []string{}
 	for i := range files {
 		//for libs of python 2.7 and 3.6 on 32 and 64 bits.
+		//TODO: add diference of python version.
 		for _, str := range names {
 			if strings.Contains(i, str) {
-				auxMap[i] = i
+				auxMap = append(auxMap, i)
 			}
 		}
 	}
@@ -35,22 +36,16 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 		return []database.FeatureVersion{}, nil
 	}
 
-	for i := range auxMap {
-		if !(strings.Contains(i, "dist-info") || strings.Contains(i, "egg-info")) {
-			delete(auxMap, auxMap[i])
-		}
-	}
 	Libs := auxMap
 
 	// Create a map to store packages and ensure their uniqueness
 	packagesMap := make(map[string]database.FeatureVersion)
 
-	for fpath := range Libs {
+	for _, fpath := range Libs {
 		//get bytes for file on fpath
 		f, _ := files[fpath]
 		file := strings.Split(string(f), "\n")
 		var pkg database.FeatureVersion
-		counter := 0
 		for _, s := range file {
 			aux := strings.Split(s, ":")
 
@@ -59,14 +54,14 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 			switch aux[0] {
 
 			case "Name":
-				counter++
+				// Name starts the line from the second char after de ':' cause
+				// there is always a space before the version
 				pkg.Feature = database.Feature{Name: aux[1][1:]}
 
 			case "Version":
 				// Version starts the line from the second char after de ':' cause
 				// there is always a space before the version
 				pkg.Version = aux[1][1:]
-				counter++
 
 			default:
 			}

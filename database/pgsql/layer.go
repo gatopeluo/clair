@@ -37,12 +37,11 @@ func (pgSQL *pgSQL) FindLayer(name string, withFeatures, withVulnerabilities boo
 
 	// Find the layer
 	var (
-		layer           database.Layer
-		parentID        zero.Int
-		parentName      zero.String
-		nsID            zero.Int
-		nsName          sql.NullString
-		nsVersionFormat sql.NullString
+		layer      database.Layer
+		parentID   zero.Int
+		parentName zero.String
+		nsID       zero.Int
+		nsName     sql.NullString
 	)
 
 	t := time.Now()
@@ -54,7 +53,6 @@ func (pgSQL *pgSQL) FindLayer(name string, withFeatures, withVulnerabilities boo
 		&parentName,
 		&nsID,
 		&nsName,
-		&nsVersionFormat,
 	)
 	observeQueryTime("FindLayer", "searchLayer", t)
 
@@ -70,9 +68,8 @@ func (pgSQL *pgSQL) FindLayer(name string, withFeatures, withVulnerabilities boo
 	}
 	if !nsID.IsZero() {
 		layer.Namespace = &database.Namespace{
-			Model:         database.Model{ID: int(nsID.Int64)},
-			Name:          nsName.String,
-			VersionFormat: nsVersionFormat.String,
+			Model: database.Model{ID: int(nsID.Int64)},
+			Name:  nsName.String,
 		}
 	}
 
@@ -150,7 +147,7 @@ func getLayerFeatureVersions(tx *sql.Tx, layerID int) ([]database.FeatureVersion
 			&fv.Feature.Name,
 			&fv.ID,
 			&fv.Version,
-			&fv.Feature.VersionFormat,
+			&fv.VersionFormat,
 			&fv.AddedBy.ID,
 			&fv.AddedBy.Name,
 		)

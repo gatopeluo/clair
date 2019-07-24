@@ -2,14 +2,12 @@ package npm
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"os"
+	"fmt"
 
 	"strings"
 
 	"github.com/tigonza/clair/database"
 	"github.com/tigonza/clair/ext/featurefmt"
-	"github.com/tigonza/clair/pkg/commonerr"
 	"github.com/tigonza/clair/pkg/tarutil"
 )
 
@@ -26,21 +24,14 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 
 	// Fill Libs, using name of package as key, and filepath as value
 	for i := range files {
-		if strings.HasSuffix(i, "package.json") {
+		if strings.Contains(i, "node_modules") {
 			auxSlice := strings.Split(i, "/")
-			filepath := auxSlice[len(auxSlice)-2]
-			Libs[filepath] = i
+			filename := auxSlice[len(auxSlice)-2]
+			Libs[filename] = i
 		}
 	}
 	if len(files) == 0 {
-		return []database.FeatureVersion{}, nil
-	}
-
-	//Load File on temporal directory
-	tmpDir, err := ioutil.TempDir(os.TempDir(), "node")
-	defer os.RemoveAll(tmpDir)
-	if err != nil {
-		return []database.FeatureVersion{}, commonerr.ErrFilesystem
+		return []database.FeatureVersion{}, fmt.Errorf("no features")
 	}
 
 	// Create a map to store packages and ensure their uniqueness
@@ -56,14 +47,16 @@ func (l lister) ListFeatures(files tarutil.FilesMap) ([]database.FeatureVersion,
 		var pkg database.FeatureVersion
 
 		// Deploy the features info from the json file into the struct
-		json.Unmarshal(f, &pkgInfo)
+		err := json.Unmarshal(f, &pkgInfo)
 
 		//Add the info to the features
-		pkg.Feature.Name = pkgInfo.Name
-		pkg.Version = pkgInfo.Version
-		pkg.VersionFormat = "npm"
-		if pkg.Feature.Name != "" && pkg.Version != "" {
-			packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
+		if err == nil {
+			pkg.Feature.Name = pkgInfo.Name
+			pkg.Version = pkgInfo.Version
+			pkg.VersionFormat = "npm"
+			if pkg.Feature.Name != "" && pkg.Version != "" {
+				packagesMap[pkg.Feature.Name+"#"+pkg.Version] = pkg
+			}
 		}
 
 	}

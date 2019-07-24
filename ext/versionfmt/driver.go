@@ -108,6 +108,7 @@ func Compare(format, versionA, versionB string) (int, error) {
 	versionParser, exists := GetParser(format)
 	if !exists {
 		fmt.Println("opcion 2")
+		fmt.Println(format)
 		return 0, ErrUnknownVersionFormat
 	}
 

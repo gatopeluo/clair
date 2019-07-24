@@ -143,7 +143,7 @@ func (pgSQL *pgSQL) insertFeatureVersion(fv database.FeatureVersion) (id int, er
 	var created bool
 
 	t = time.Now()
-	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version, vF).Scan(&created, &fv.ID)
+	err = tx.QueryRow(soiFeatureVersion, featureID, fv.Version, fv.VersionFormat).Scan(&created, &fv.ID)
 	observeQueryTime("insertFeatureVersion", "soiFeatureVersion", t)
 
 	if err != nil {

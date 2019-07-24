@@ -77,7 +77,7 @@ const (
 
 	// layer.go
 	searchLayer = `
-		SELECT l.id, l.name, l.engineversion, p.id, p.name, n.id, n.name, n.version_format
+		SELECT l.id, l.name, l.engineversion, p.id, p.name, n.id, n.name
 		FROM Layer l
 			LEFT JOIN Layer p ON l.parent_id = p.id
 			LEFT JOIN Namespace n ON l.namespace_id = n.id

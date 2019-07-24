@@ -37,7 +37,7 @@ var registeredFormats = []struct {
 	name   string
 	format format
 }{
-	// {"sif", &sifFormat{}},
+	{"sif", &sifFormat{}},
 	{"sandbox", &sandboxFormat{}},
 	{"squashfs", &squashfsFormat{}},
 	{"ext3", &ext3Format{}},
